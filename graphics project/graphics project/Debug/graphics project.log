@@ -1,0 +1,6 @@
+﻿  FileName.cpp
+C:\Users\AMAR KHALED\source\repos\graphics project\graphics project\FileName.cpp(94,22): warning C4566: character represented by universal-character-name '\U0001F389' cannot be represented in the current code page (1252)
+C:\Users\AMAR KHALED\source\repos\graphics project\graphics project\FileName.cpp(115,18): warning C4566: character represented by universal-character-name '\U0001F300' cannot be represented in the current code page (1252)
+C:\Users\AMAR KHALED\source\repos\graphics project\graphics project\FileName.cpp(206,22): warning C4566: character represented by universal-character-name '\U0001F389' cannot be represented in the current code page (1252)
+C:\Users\AMAR KHALED\source\repos\graphics project\graphics project\FileName.cpp(206,62): warning C4566: character represented by universal-character-name '\U0001F389' cannot be represented in the current code page (1252)
+  graphics project.vcxproj -> C:\Users\AMAR KHALED\source\repos\graphics project\Debug\graphics project.exe
