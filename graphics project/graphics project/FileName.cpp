@@ -183,7 +183,7 @@ void display() {
     for (int z = 0; z < MAZE_HEIGHT; ++z) {
         for (int x = 0; x < MAZE_WIDTH; ++x) {
             if (mazes[level][z][x] == 1) {
-                drawCube(x, 0.5f, z);
+                drawCube(x, 0.2f, z);
             }
         }
     }
