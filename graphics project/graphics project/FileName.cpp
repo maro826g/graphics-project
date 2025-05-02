@@ -6,8 +6,12 @@ const int MAZE_WIDTH = 20;
 const int MAZE_HEIGHT = 20;
 
 int level = 0;
+bool gameEnded = false;
 
-// Level 1
+int playerX = 0, playerZ = 0;
+int goalX = 0, goalZ = 0;
+
+// ==== Level Definitions ====
 int maze1[MAZE_HEIGHT][MAZE_WIDTH] = {
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -31,7 +35,6 @@ int maze1[MAZE_HEIGHT][MAZE_WIDTH] = {
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 };
 
-// Level 2
 int maze2[MAZE_HEIGHT][MAZE_WIDTH] = {
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -41,7 +44,7 @@ int maze2[MAZE_HEIGHT][MAZE_WIDTH] = {
     {1,1,0,0,1,0,0,1,0,1,0,0,0,0,0,1,0,1,1,1},
     {1,1,1,0,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1},
     {1,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1,1,1},
-    {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1},
+    {1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1},
     {1,1,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,1},
     {1,1,1,0,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1},
     {1,1,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,1},
@@ -54,7 +57,7 @@ int maze2[MAZE_HEIGHT][MAZE_WIDTH] = {
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 };
-// Level 3
+
 int maze3[MAZE_HEIGHT][MAZE_WIDTH] = {
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
     {1,3,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1},
@@ -66,7 +69,7 @@ int maze3[MAZE_HEIGHT][MAZE_WIDTH] = {
     {1,0,0,0,1,0,1,0,1,0,0,0,1,0,1,1,0,1,0,1},
     {1,0,1,0,1,0,1,0,1,1,1,1,1,0,0,1,0,0,0,1},
     {1,0,1,0,1,0,1,0,0,0,0,0,0,0,1,1,1,1,0,1},
-    {1,0,1,0,1,0,1,1,1,1,1,1,1,0,1,0,0,1,0,1},
+    {1,0,1,0,1,0,1,1,1,1,1,1,1,0,0,0,0,1,0,1},
     {1,0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,1},
     {1,0,1,1,1,1,1,1,1,1,1,0,1,0,1,0,1,0,0,1},
     {1,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,1,1},
@@ -78,21 +81,15 @@ int maze3[MAZE_HEIGHT][MAZE_WIDTH] = {
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 };
 
+// === Array of Mazes ===
 int (*mazes[])[MAZE_WIDTH] = { maze1, maze2, maze3 };
 const int totalLevels = sizeof(mazes) / sizeof(mazes[0]);
 
-int playerX = 0;
-int playerZ = 0;
-
-int goalX = 0;
-int goalZ = 0;
-
-bool gameEnded = false;
-
+// === Initialization ===
 void loadLevel(int lvl) {
     if (lvl >= totalLevels) {
-        std::cout << "🎉 Game Completed! No more levels.\n";
-        return;
+        std::cout << " All levels complete!\n";
+        exit(0);
     }
 
     level = lvl;
@@ -107,12 +104,12 @@ void loadLevel(int lvl) {
             if (mazes[level][z][x] == 3) {
                 playerX = x;
                 playerZ = z;
-                mazes[level][z][x] = 0;
+                mazes[level][z][x] = 0; // Clear start position
             }
         }
     }
 
-    std::cout << "🌀 Level " << (level + 1) << " started!\n";
+    std::cout << " Level " << (level + 1) << " started!\n";
 }
 
 void initLighting() {
@@ -135,6 +132,7 @@ void init() {
     loadLevel(0);
 }
 
+// === Drawing ===
 void drawCube(float x, float y, float z) {
     glPushMatrix();
     glTranslatef(x, y, z);
@@ -166,7 +164,7 @@ void display() {
         MAZE_WIDTH / 2.0, 0.0, MAZE_HEIGHT / 2.0,
         0.0, 1.0, 0.0);
 
-    // Draw floor
+    // Floor
     glColor3f(0.3f, 0.3f, 0.3f);
     for (int z = 0; z < MAZE_HEIGHT; ++z) {
         for (int x = 0; x < MAZE_WIDTH; ++x) {
@@ -178,7 +176,7 @@ void display() {
         }
     }
 
-    // Draw walls
+    // Walls
     glColor3f(0.6f, 0.1f, 0.1f);
     for (int z = 0; z < MAZE_HEIGHT; ++z) {
         for (int x = 0; x < MAZE_WIDTH; ++x) {
@@ -194,6 +192,7 @@ void display() {
     glutSwapBuffers();
 }
 
+// === Movement & Input ===
 bool canMove(int x, int z) {
     if (x < 0 || x >= MAZE_WIDTH || z < 0 || z >= MAZE_HEIGHT)
         return false;
@@ -203,12 +202,15 @@ bool canMove(int x, int z) {
 void checkWin() {
     if (playerX == goalX && playerZ == goalZ && !gameEnded) {
         gameEnded = true;
-        std::cout << "🎉 You Win Level " << (level + 1) << "! 🎉\n";
-        glutTimerFunc(1000, [](int) { loadLevel(level + 1); glutPostRedisplay(); }, 0);
+        std::cout << " You completed Level " << (level + 1) << "!\n";
+        glutTimerFunc(1000, [](int) {
+            loadLevel(level + 1);
+            glutPostRedisplay();
+            }, 0);
     }
 }
 
-void specialKeys(int key, int x, int y) {
+void specialKeys(int key, int, int) {
     if (gameEnded) return;
 
     int newX = playerX;
@@ -233,26 +235,22 @@ void specialKeys(int key, int x, int y) {
 void reshape(int w, int h) {
     if (h == 0) h = 1;
     float aspect = (float)w / (float)h;
-
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60.0, aspect, 1.0, 100.0);
+    gluPerspective(45, aspect, 1, 100);
     glMatrixMode(GL_MODELVIEW);
 }
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(1000, 800);
-    glutCreateWindow("3D Maze Game - Multi-Level");
-
+    glutInitWindowSize(2000, 780);
+    glutCreateWindow("speedy sphere");
     init();
-
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutSpecialFunc(specialKeys);
-
     glutMainLoop();
     return 0;
 }
